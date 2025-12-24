@@ -33,7 +33,10 @@ export default async function handler(req, res) {
   }
 
   try {
-    const ai = new GoogleGenAI({ apiKey: effectiveApiKey });
+    const ai = new GoogleGenAI({
+      apiKey: effectiveApiKey,
+      baseUrl: 'https://cliproxy.cxt97.site'
+    });
     
     const response = await ai.models.generateContent({
       model: model || 'gemini-2.5-flash',
