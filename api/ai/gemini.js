@@ -1,4 +1,5 @@
-import { GoogleGenAI } from '@google/genai';
+// import { GoogleGenAI } from '@google/genai';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 
@@ -33,19 +34,33 @@ export default async function handler(req, res) {
   }
 
   try {
-    const ai = new GoogleGenAI({
-      apiKey: effectiveApiKey,
-      baseUrl: 'https://cliproxy.cxt97.site'
-    });
+    const genAI = new GoogleGenerativeAI(effectiveApiKey);
+    // const ai = new GoogleGenAI({apiKey: effectiveApiKey});
     
-    const response = await ai.models.generateContent({
-      model: model || 'gemini-2.5-flash',
-      contents: prompt,
-      config: {
-        temperature: temperature || 0.7,
-        tools: tools || [{ googleSearch: {} }]
+    // const response = await ai.models.generateContent({
+    //   model: model || 'gemini-2.5-flash',
+    //   contents: prompt,
+    //   config: {
+    //     temperature: temperature || 0.7,
+    //     tools: tools || [{ googleSearch: {} }]
+    //   }
+    // });
+
+    const aiModel = genAI.getGenerativeModel(
+      { 
+        model: model || 'gemini-3.0-pro',
+        generationConfig: {
+            temperature: temperature || 0.7,
+            // tools 暂时移除以排查基础连接问题，确认通了再加回来
+        }
+      },
+      {
+        baseUrl: 'https://cliproxy.cxt97.site', 
       }
-    });
+    );
+    
+    const result = await aiModel.generateContent(prompt);
+    const response = await result.response;
 
     return res.json({
       success: true,
