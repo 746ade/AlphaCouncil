@@ -48,7 +48,7 @@ export default async function handler(req, res) {
 
     const aiModel = genAI.getGenerativeModel(
       { 
-        model: model || 'gemini-3.0-pro',
+        model: model || 'gemini-3-pro-preview',
         generationConfig: {
             temperature: temperature || 0.7,
             // tools 暂时移除以排查基础连接问题，确认通了再加回来
